@@ -14,6 +14,7 @@ public class TurretBehaviour : MonoBehaviour
 	public List<GameObject> targets;
 
 	public bool selected;
+	public int bulletSpeed;
 
 
 
@@ -47,7 +48,7 @@ public class TurretBehaviour : MonoBehaviour
 				Rigidbody clone;
 				Vector3 randomDisplacement = new Vector3(Random.Range(0f,.15f),0,Random.Range(0f,.15f));
 				clone = Instantiate(projectile, barrelEnd.transform.position + randomDisplacement, barrelEnd.transform.rotation) as Rigidbody;
-				clone.velocity = transform.TransformDirection(barrelEnd.transform.up * 20);
+				clone.velocity = transform.TransformDirection(barrelEnd.transform.up * bulletSpeed);
 
 			}
 			if(CrossPlatformInputManager.GetButtonDown("Zoom"))
