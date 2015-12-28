@@ -10,6 +10,7 @@ public class TurretBehaviour : MonoBehaviour
 	public GameObject FPV;
 	public GameObject miniGun;
 	public GameObject barrelEnd;
+	public GameObject indicator;
 	public Rigidbody projectile;
 	public List<GameObject> targets;
 
@@ -33,7 +34,7 @@ public class TurretBehaviour : MonoBehaviour
 		if(selected)
 		{
 			//need a way to limit y movement of turret, otherwise could end up upside down?
-
+			indicator.SetActive(true);
 			Vector3 xMoveVec = new Vector3( 0, CrossPlatformInputManager.GetAxis("Horizontal"), 0) * speed;
 			Vector3 yMoveVec = new Vector3( CrossPlatformInputManager.GetAxis("Vertical") * -1, 0, 0) * (speed * .5f);
 			Vector3 upDir = new Vector3(0,1,0) * 100;
@@ -63,19 +64,22 @@ public class TurretBehaviour : MonoBehaviour
 				}
 
 			}
-
+			// this makes the turret fly
+			//transform.Translate(yHead.transform.forward * Time.deltaTime * speed, Space.World);
 		}
-		else if(targets.Count > 0)
+		else
 		{
-			yHead.transform.LookAt(targets[0].transform);
+			indicator.SetActive(false);
+			if(targets.Count > 0)
+			{
+				yHead.transform.LookAt(targets[0].transform);
 
 
-			Rigidbody clone;
-			Vector3 randomDisplacement = new Vector3(Random.Range(0f,.15f),0,Random.Range(0f,.15f));
-			clone = Instantiate(projectile, barrelEnd.transform.position + randomDisplacement, barrelEnd.transform.rotation) as Rigidbody;
-			clone.velocity = transform.TransformDirection(barrelEnd.transform.up * 20);
-
-
+				Rigidbody clone;
+				Vector3 randomDisplacement = new Vector3(Random.Range(0f,.15f),0,Random.Range(0f,.15f));
+				clone = Instantiate(projectile, barrelEnd.transform.position + randomDisplacement, barrelEnd.transform.rotation) as Rigidbody;
+				clone.velocity = transform.TransformDirection(barrelEnd.transform.up * 20);
+			}
 		}
 	}
 
