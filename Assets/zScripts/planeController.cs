@@ -4,12 +4,8 @@ using System.Collections.Generic;
 using UnityStandardAssets.CrossPlatformInput;
 
 
-public class planeControlls : MonoBehaviour {
-
-
-
-	
-
+public class planeController : MonoBehaviour 
+{
 
 	public GameObject xHead;
 	public GameObject yHead;
@@ -17,6 +13,8 @@ public class planeControlls : MonoBehaviour {
 	public int bulletSpeed;
 	public float speed;
 	public float turnSpeed;
+	public Rigidbody planeRB;
+	public float tilt;
 
 		
 	// Use this for initialization
@@ -39,7 +37,8 @@ public class planeControlls : MonoBehaviour {
 		
 		// this makes the turret fly
 		transform.Translate(yHead.transform.forward * Time.deltaTime * speed, Space.World);
-	
+
+		//planeRB.rotation = Quaternion.Euler (0.0f, 0.0f, CrossPlatformInputManager.GetAxis ("Horizontal") * tilt);
 
 	}
 		
