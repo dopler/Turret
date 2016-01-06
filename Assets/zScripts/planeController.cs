@@ -28,8 +28,11 @@ public class planeController : MonoBehaviour
 	{
 		
 		//need a way to limit y movement of turret, otherwise could end up upside down?
-		Vector3 xMoveVec = new Vector3( 0, CrossPlatformInputManager.GetAxis("Horizontal"), 0) * speed;
-		Vector3 yMoveVec = new Vector3( CrossPlatformInputManager.GetAxis("Vertical") * -1, 0, 0) * (speed * .5f);
+		float xHorizontal = CrossPlatformInputManager.GetAxis ("Horizontal");
+		float yVertical = CrossPlatformInputManager.GetAxis ("Vertical");
+
+		Vector3 xMoveVec = new Vector3( 0, xHorizontal , 0) * speed;
+		Vector3 yMoveVec = new Vector3( yVertical * -1, 0, 0) * (speed * .5f);
 		//Vector3 upDir = new Vector3(0,1,0) * 100;
 		
 		xHead.transform.Rotate(xMoveVec * Time.deltaTime * turnSpeed);
@@ -38,7 +41,7 @@ public class planeController : MonoBehaviour
 		// this makes the turret fly
 		transform.Translate(yHead.transform.forward * Time.deltaTime * speed, Space.World);
 
-		//planeRB.rotation = Quaternion.Euler (0.0f, 0.0f, CrossPlatformInputManager.GetAxis ("Horizontal") * tilt);
+		//planeRB.rotation = Quaternion.Euler (transform.rotation.x,transform.rotation.y, 0.0f);
 
 	}
 		

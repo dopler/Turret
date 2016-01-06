@@ -13,10 +13,13 @@ public class TurretBehaviour : MonoBehaviour
 	public GameObject barrelEnd;
 	public GameObject indicator;
 	public Rigidbody projectile;
+	public GameObject missle;
+	public GameObject batteryEnd;
 	public List<GameObject> targets;
 
 	public bool selected;
 	public int bulletSpeed;
+	public float missleDelay;
 
 	public float speed;
 
@@ -27,9 +30,23 @@ public class TurretBehaviour : MonoBehaviour
 	public float maximumX = 360F;
 	public float minimumY = -60F;
 	public float maximumY = 60F;
+	bool readyToFire;
 	float rotationX = 0F;
 	float rotationY = 0F;
 	Quaternion originalRotation;
+
+
+	void Start ()
+	{
+		// Make the rigid body not change rotation
+		if (GetComponent<Rigidbody>())
+			GetComponent<Rigidbody>().freezeRotation = true;
+		originalRotation = transform.localRotation;
+
+		readyToFire = true;
+		
+	}
+
 
 	void Update ()
 	{
@@ -57,6 +74,20 @@ public class TurretBehaviour : MonoBehaviour
 				clone = Instantiate(projectile, barrelEnd.transform.position + randomDisplacement, barrelEnd.transform.rotation) as Rigidbody;
 				//clone.velocity = transform.TransformDirection(barrelEnd.transform.up * bulletSpeed);
 				clone.AddForce(transform.forward * bulletSpeed);
+
+				if(readyToFire)
+				{
+					GameObject theMissle;
+					theMissle = Instantiate(missle, batteryEnd.transform.position, batteryEnd.transform.rotation) as GameObject;
+					if(targets.Count > 0)
+					{
+						theMissle.GetComponent<HomingMissleScript>().SetTarget(targets[0].gameObject);
+					}
+					readyToFire = false;
+					StartCoroutine(MissleDelay());
+				}
+
+
 				
 			}
 			if(CrossPlatformInputManager.GetButtonDown("Zoom"))
@@ -89,18 +120,20 @@ public class TurretBehaviour : MonoBehaviour
 				clone = Instantiate(projectile, barrelEnd.transform.position + randomDisplacement, barrelEnd.transform.rotation) as Rigidbody;
 				//clone.velocity = transform.TransformDirection(barrelEnd.transform.up * bulletSpeed);
 				clone.AddForce(transform.forward * bulletSpeed);
+				if(readyToFire)
+				{
+					GameObject theMissle;
+					theMissle = Instantiate(missle, batteryEnd.transform.position, batteryEnd.transform.rotation) as GameObject;
+					theMissle.GetComponent<HomingMissleScript>().SetTarget(targets[0].gameObject);
+					readyToFire = false;
+					StartCoroutine(MissleDelay());
+				}
 			}
 
 		}
 	}
 
-	void Start ()
-	{
-		// Make the rigid body not change rotation
-		if (GetComponent<Rigidbody>())
-			GetComponent<Rigidbody>().freezeRotation = true;
-		originalRotation = transform.localRotation;
-	}
+
 	public static float ClampAngle (float angle, float min, float max)
 	{
 		if (angle <= -360F)
@@ -130,6 +163,7 @@ public class TurretBehaviour : MonoBehaviour
 	public void TurnOffCam()
 	{
 		FPV.SetActive (false);
+		//originalRotation = transform.localRotation;
 	}
 	
 	public void TurnOnCam()
@@ -137,7 +171,16 @@ public class TurretBehaviour : MonoBehaviour
 		FPV.SetActive (true);
 	}
 
+	public void ShotMissle()
+	{
 
+	}
+
+	IEnumerator MissleDelay()
+	{
+		yield return new WaitForSeconds(missleDelay);
+		readyToFire = true;
+	}
 
 	/*
 	// Use this for initialization
