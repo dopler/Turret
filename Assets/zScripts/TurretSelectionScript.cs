@@ -24,7 +24,14 @@ public class TurretSelectionScript : MonoBehaviour {
 		}
 		if(turrets.Count != 0)
 		{
-			turrets[currentTurret].GetComponent<TurretBehaviour>().selected = true;
+			if(turrets[currentTurret].GetComponent<TurretBehaviour>() != null)
+			{
+				turrets[currentTurret].GetComponent<TurretBehaviour>().selected = true;
+			}
+			else
+			{
+				turrets[currentTurret].GetComponent<RayCastTurret>().selected = true;
+			}
 		}
 	}
 	
@@ -39,10 +46,20 @@ public class TurretSelectionScript : MonoBehaviour {
 
 	void SwitchTurret()
 	{
-		turrets[currentTurret].GetComponent<TurretBehaviour>().selected = false;
-		turrets [currentTurret].GetComponent<TurretBehaviour> ().TurnOffCam ();
-		currentTurret = (currentTurret + 1) % turrets.Count;
-		turrets[currentTurret].GetComponent<TurretBehaviour>().selected = true;
+		if(turrets[currentTurret].GetComponent<TurretBehaviour>() != null)
+		{
+			turrets[currentTurret].GetComponent<TurretBehaviour>().selected = false;
+			turrets [currentTurret].GetComponent<TurretBehaviour> ().TurnOffCam ();
+			currentTurret = (currentTurret + 1) % turrets.Count;
+			turrets[currentTurret].GetComponent<TurretBehaviour>().selected = true;
+		}
+		else if(turrets[currentTurret].GetComponent<RayCastTurret>() != null)
+		{
+			turrets[currentTurret].GetComponent<RayCastTurret>().selected = false;
+			turrets [currentTurret].GetComponent<RayCastTurret> ().TurnOffCam ();
+			currentTurret = (currentTurret + 1) % turrets.Count;
+			turrets[currentTurret].GetComponent<RayCastTurret>().selected = true;
+		}
 	}
 
 }
