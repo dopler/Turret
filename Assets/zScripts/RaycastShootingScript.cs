@@ -36,7 +36,7 @@ public class RaycastShootingScript : MonoBehaviour {
 
 		if(CrossPlatformInputManager.GetButton("Fire") && timer > timeBetweenBullets)
 		{
-			Shoot();
+			//Shoot();
 		}
 
 		if(timer >= timeBetweenBullets * effectsDisplayTime)
@@ -51,7 +51,7 @@ public class RaycastShootingScript : MonoBehaviour {
 		gunLight.enabled = false;
 	}
 
-	void Shoot()
+	public void Shoot()
 	{
 
 		// Reset the timer.
@@ -72,13 +72,13 @@ public class RaycastShootingScript : MonoBehaviour {
 		gunLine.SetPosition (0, transform.position);
 		
 		// Set the shootRay so that it starts at the end of the gun and points forward from the barrel.
-		shootRay.origin = center.transform.position;
+		shootRay.origin = transform.position;
 		shootRay.direction = center.transform.forward;
 		
 		// Perform the raycast against gameobjects on the shootable layer and if it hits something...
 		if(Physics.Raycast (shootRay, out shootHit, range, shootableMask))
 		{
-
+			Debug.Log("here");
 			
 			// Set the second position of the line renderer to the point the raycast hit.
 			gunLine.SetPosition (1, shootHit.point);
@@ -89,6 +89,7 @@ public class RaycastShootingScript : MonoBehaviour {
 		// If the raycast didn't hit anything on the shootable layer...
 		else
 		{
+			Debug.Log("no here");
 			// ... set the second position of the line renderer to the fullest extent of the gun's range.
 			gunLine.SetPosition (1, shootRay.origin + shootRay.direction * range);
 		}

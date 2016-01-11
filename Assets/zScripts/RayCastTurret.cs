@@ -29,6 +29,8 @@ public class RayCastTurret : MonoBehaviour {
 	public float maximumX = 360F;
 	public float minimumY = -60F;
 	public float maximumY = 60F;
+	public float timeBetweenBullets = 0.15f;
+	float timer;
 	bool readyToFire;
 	float rotationX = 0F;
 	float rotationY = 0F;
@@ -49,6 +51,7 @@ public class RayCastTurret : MonoBehaviour {
 	
 	void Update ()
 	{
+		timer += Time.deltaTime;
 		if(selected)
 		{
 			indicator.SetActive(true);
@@ -64,26 +67,22 @@ public class RayCastTurret : MonoBehaviour {
 			
 			Vector3 upDir = new Vector3(0,1,0) * 100;
 			
-			if(CrossPlatformInputManager.GetButton("Fire"))
+			if(CrossPlatformInputManager.GetButton("Fire") && timer > timeBetweenBullets)
 			{
 				miniGun.transform.Rotate(upDir * Time.deltaTime);
-				
-				//Rigidbody clone;
-				//Vector3 randomDisplacement = new Vector3(Random.Range(0f,.15f),0,Random.Range(0f,.15f));
-				//clone = Instantiate(projectile, barrelEnd.transform.position + randomDisplacement, barrelEnd.transform.rotation) as Rigidbody;
-				//clone.velocity = transform.TransformDirection(barrelEnd.transform.up * bulletSpeed);
-				//clone.AddForce(transform.forward * bulletSpeed);
+				barrelEnd.GetComponent<RaycastShootingScript>().Shoot();
+				ShootDelay();
 
 				if(readyToFire)
 				{
-					/*GameObject theMissle;
+					GameObject theMissle;
 					theMissle = Instantiate(missle, batteryEnd.transform.position, batteryEnd.transform.rotation) as GameObject;
 					if(targets.Count > 0)
 					{
 						theMissle.GetComponent<HomingMissleScript>().SetTarget(targets[0].gameObject);
 					}
 					readyToFire = false;
-					StartCoroutine(MissleDelay());*/
+					StartCoroutine(MissleDelay());
 				}
 
 
@@ -113,25 +112,32 @@ public class RayCastTurret : MonoBehaviour {
 				
 				
 				miniGun.transform.Rotate(upDir * Time.deltaTime);
-				
-				Rigidbody clone;
-				Vector3 randomDisplacement = new Vector3(Random.Range(0f,.15f),0,Random.Range(0f,.15f));
-				clone = Instantiate(projectile, barrelEnd.transform.position + randomDisplacement, barrelEnd.transform.rotation) as Rigidbody;
-				//clone.velocity = transform.TransformDirection(barrelEnd.transform.up * bulletSpeed);
-				clone.AddForce(transform.forward * bulletSpeed);
-				if(readyToFire)
+				if(timer > timeBetweenBullets)
 				{
-					GameObject theMissle;
-					theMissle = Instantiate(missle, batteryEnd.transform.position, batteryEnd.transform.rotation) as GameObject;
-					theMissle.GetComponent<HomingMissleScript>().SetTarget(targets[0].gameObject);
-					readyToFire = false;
-					StartCoroutine(MissleDelay());
+					miniGun.transform.Rotate(upDir * Time.deltaTime);
+					barrelEnd.GetComponent<RaycastShootingScript>().Shoot();
+					ShootDelay();
+					
+					if(readyToFire)
+					{
+						GameObject theMissle;
+						theMissle = Instantiate(missle, batteryEnd.transform.position, batteryEnd.transform.rotation) as GameObject;
+						if(targets.Count > 0)
+						{
+							theMissle.GetComponent<HomingMissleScript>().SetTarget(targets[0].gameObject);
+						}
+						readyToFire = false;
+						StartCoroutine(MissleDelay());
+					}
 				}
 			}
-			
 		}
 	}
-	
+
+	void ShootDelay()
+	{
+		timer = 0f;
+	}
 	
 	public static float ClampAngle (float angle, float min, float max)
 	{

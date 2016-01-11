@@ -15,6 +15,11 @@ public class planeController : MonoBehaviour
 	public float turnSpeed;
 	public Rigidbody planeRB;
 	public float tilt;
+	public GameObject leftTurret;
+	public GameObject rightTurret;
+	public float timeBetweenBullets = 0.15f;
+	float timer;
+	bool readyToFire;
 
 		
 	// Use this for initialization
@@ -26,7 +31,7 @@ public class planeController : MonoBehaviour
 	// Update is called once per frame
 	void FixedUpdate () 
 	{
-		
+		timer += Time.deltaTime;
 		//need a way to limit y movement of turret, otherwise could end up upside down?
 		float xHorizontal = CrossPlatformInputManager.GetAxis ("Horizontal");
 		float yVertical = CrossPlatformInputManager.GetAxis ("Vertical");
@@ -43,11 +48,22 @@ public class planeController : MonoBehaviour
 
 		//planeRB.rotation = Quaternion.Euler (transform.rotation.x,transform.rotation.y, 0.0f);
 
+
+
+			if(CrossPlatformInputManager.GetButton("Fire") && timer > timeBetweenBullets)
+		{
+			leftTurret.GetComponent<RaycastShootingScript>().Shoot();
+			rightTurret.GetComponent<RaycastShootingScript>().Shoot();
+			ShootDelay();
+		}
 	}
 		
 
 
-
+	void ShootDelay()
+	{
+		timer = 0f;
+	}
 
 
 

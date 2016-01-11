@@ -67,7 +67,7 @@ public class TurretBehaviour : MonoBehaviour
 
 			if(CrossPlatformInputManager.GetButton("Fire"))
 			{
-				/*miniGun.transform.Rotate(upDir * Time.deltaTime);
+				miniGun.transform.Rotate(upDir * Time.deltaTime * 100);
 				
 				Rigidbody clone;
 				Vector3 randomDisplacement = new Vector3(Random.Range(0f,.15f),0,Random.Range(0f,.15f));
@@ -87,7 +87,7 @@ public class TurretBehaviour : MonoBehaviour
 					StartCoroutine(MissleDelay());
 				}
 
-				*/
+
 				
 			}
 			if(CrossPlatformInputManager.GetButtonDown("Zoom"))
